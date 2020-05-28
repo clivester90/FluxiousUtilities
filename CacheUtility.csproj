@@ -55,10 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cache\Buffer.cs" />
     <Compile Include="Cache\CacheConstants.cs" />
     <Compile Include="Cache\interfaces\ICacheConstants.cs" />
-    <Compile Include="Definitions\ItemDefinitions.cs" />
     <Compile Include="frmZip.cs">
       <SubType>Form</SubType>
     </Compile>
