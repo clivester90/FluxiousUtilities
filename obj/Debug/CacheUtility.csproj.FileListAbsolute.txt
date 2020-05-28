@@ -25,4 +25,3 @@ C:\Users\Clive\Documents\VS Projects\FileUtils\obj\Debug\CacheUtility.csproj.Cor
 C:\Users\Clive\Documents\VS Projects\FileUtils\obj\Debug\CacheUtility.csproj.CopyComplete
 C:\Users\Clive\Documents\VS Projects\FileUtils\obj\Debug\CacheUtility.exe
 C:\Users\Clive\Documents\VS Projects\FileUtils\obj\Debug\CacheUtility.pdb
-C:\Users\Clive\Documents\VS Projects\FileUtils\obj\Debug\CacheUtility.csprojAssemblyReference.cache

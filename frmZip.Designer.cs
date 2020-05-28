@@ -34,18 +34,18 @@
             this.folderResults = new System.Windows.Forms.ListBox();
             this.zipCacheContents = new System.Windows.Forms.Button();
             this.fileViewData = new System.Windows.Forms.DataGridView();
+            this.StatusText = new System.Windows.Forms.Label();
             this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FileType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FileSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.StatusText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.fileViewData)).BeginInit();
             this.SuspendLayout();
             // 
             // ProgressBar
             // 
-            this.ProgressBar.Location = new System.Drawing.Point(150, 301);
+            this.ProgressBar.Location = new System.Drawing.Point(164, 314);
             this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(199, 28);
+            this.ProgressBar.Size = new System.Drawing.Size(199, 10);
             this.ProgressBar.TabIndex = 0;
             // 
             // LoadCacheButton
@@ -65,7 +65,7 @@
             this.folderResults.Name = "folderResults";
             this.folderResults.Size = new System.Drawing.Size(143, 251);
             this.folderResults.TabIndex = 2;
-            this.folderResults.SelectedIndexChanged += new System.EventHandler(this.folderResults_SelectedIndexChanged);
+            this.folderResults.SelectedIndexChanged += new System.EventHandler(this.FolderResults_SelectedIndexChanged);
             // 
             // zipCacheContents
             // 
@@ -76,10 +76,11 @@
             this.zipCacheContents.Text = "Zip";
             this.zipCacheContents.UseVisualStyleBackColor = true;
             this.zipCacheContents.Visible = false;
-            this.zipCacheContents.Click += new System.EventHandler(this.zipCacheContents_Click);
+            this.zipCacheContents.Click += new System.EventHandler(this.ZipCacheContents_Click);
             // 
             // fileViewData
             // 
+            this.fileViewData.AllowUserToAddRows = false;
             this.fileViewData.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
             this.fileViewData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.fileViewData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -91,11 +92,20 @@
             this.fileViewData.Size = new System.Drawing.Size(418, 251);
             this.fileViewData.TabIndex = 5;
             // 
+            // StatusText
+            // 
+            this.StatusText.AutoSize = true;
+            this.StatusText.Location = new System.Drawing.Point(12, 314);
+            this.StatusText.Name = "StatusText";
+            this.StatusText.Size = new System.Drawing.Size(61, 13);
+            this.StatusText.TabIndex = 6;
+            this.StatusText.Text = "Status Text";
+            // 
             // FileName
             // 
             this.FileName.HeaderText = "File Name";
             this.FileName.Name = "FileName";
-            this.FileName.Width = 120;
+            this.FileName.Width = 140;
             // 
             // FileType
             // 
@@ -110,15 +120,6 @@
             this.FileSize.Name = "FileSize";
             this.FileSize.ReadOnly = true;
             this.FileSize.Width = 133;
-            // 
-            // StatusText
-            // 
-            this.StatusText.AutoSize = true;
-            this.StatusText.Location = new System.Drawing.Point(9, 304);
-            this.StatusText.Name = "StatusText";
-            this.StatusText.Size = new System.Drawing.Size(61, 13);
-            this.StatusText.TabIndex = 6;
-            this.StatusText.Text = "Status Text";
             // 
             // frmZipper
             // 
@@ -150,10 +151,10 @@
         private System.Windows.Forms.Button zipCacheContents;
         public System.Windows.Forms.ListBox folderResults;
         private System.Windows.Forms.DataGridView fileViewData;
+        private System.Windows.Forms.Label StatusText;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileType;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileSize;
-        private System.Windows.Forms.Label StatusText;
     }
 }
 
