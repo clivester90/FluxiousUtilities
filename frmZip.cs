@@ -52,8 +52,8 @@ namespace CacheUtility
                     {
                         folderResults.Items.Add(folderFiles.Replace(folderBrowser.SelectedPath+ "\\", string.Empty));
                         fileResults.Add(folderFiles);
-                        zipCacheContents.Visible = true;
                     }
+                    zipCacheContents.Visible = true;
                 }
             }
         }
@@ -93,6 +93,12 @@ namespace CacheUtility
 
                 Process.Start(startInfo);
             }
+        }
+
+        private void folderResults_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            fileViewData.Rows.Clear();
+            fileViewData.Rows.Insert(0, "Name", "Type", "Size");
         }
     }
 

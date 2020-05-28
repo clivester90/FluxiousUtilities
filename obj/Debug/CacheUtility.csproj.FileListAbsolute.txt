@@ -15,3 +15,14 @@ C:\Users\Clive\Documents\VS Projects\FluxiousToolSuite\CacheUtility\bin\Debug\Co
 C:\Users\Clive\Documents\VS Projects\FluxiousToolSuite\CacheUtility\bin\Debug\ComponentPro.Zip.xml
 C:\Users\Clive\Documents\VS Projects\FluxiousToolSuite\CacheUtility\obj\Debug\CacheUtility.csprojAssemblyReference.cache
 C:\Users\Clive\Documents\VS Projects\FluxiousToolSuite\CacheUtility\obj\Debug\CacheUtility.csproj.CopyComplete
+C:\Users\Clive\Documents\VS Projects\FileUtils\bin\Debug\CacheUtility.exe.config
+C:\Users\Clive\Documents\VS Projects\FileUtils\bin\Debug\CacheUtility.exe
+C:\Users\Clive\Documents\VS Projects\FileUtils\bin\Debug\CacheUtility.pdb
+C:\Users\Clive\Documents\VS Projects\FileUtils\obj\Debug\CacheUtility.frmZipper.resources
+C:\Users\Clive\Documents\VS Projects\FileUtils\obj\Debug\CacheUtility.Properties.Resources.resources
+C:\Users\Clive\Documents\VS Projects\FileUtils\obj\Debug\CacheUtility.csproj.GenerateResource.cache
+C:\Users\Clive\Documents\VS Projects\FileUtils\obj\Debug\CacheUtility.csproj.CoreCompileInputs.cache
+C:\Users\Clive\Documents\VS Projects\FileUtils\obj\Debug\CacheUtility.csproj.CopyComplete
+C:\Users\Clive\Documents\VS Projects\FileUtils\obj\Debug\CacheUtility.exe
+C:\Users\Clive\Documents\VS Projects\FileUtils\obj\Debug\CacheUtility.pdb
+C:\Users\Clive\Documents\VS Projects\FileUtils\obj\Debug\CacheUtility.csprojAssemblyReference.cache
