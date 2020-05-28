@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using CacheUtility.Cache;
+using CacheUtility.ZipUtilities;
 using ComponentPro.Compression;
 using ComponentPro.IO;
 
@@ -12,14 +13,17 @@ namespace CacheUtility
 {
     public partial class frmZipper : Form
     {
+
         public frmZipper()
         {
             InitializeComponent();
             fileResults.Clear();
+            zip.ProgressUpdated += DisplayProgress;
         }
 
-        public string recentCacheDirectory { get; set; }
+        public string recentFolder { get; set; }
         private readonly List<string> fileResults = new List<string>();
+        private ZipHandler zip = new ZipHandler();
 
         public void ClearLists()   
         {
@@ -36,12 +40,12 @@ namespace CacheUtility
             {
                 folderBrowser.Description = "Select your cache directory";
 
-                if (!string.IsNullOrEmpty(recentCacheDirectory))
-                    folderBrowser.SelectedPath = recentCacheDirectory;
+                if (!string.IsNullOrEmpty(recentFolder))
+                    folderBrowser.SelectedPath = recentFolder;
 
                 if (folderBrowser.ShowDialog() == DialogResult.OK)
                 {
-                    recentCacheDirectory = folderBrowser.SelectedPath;
+                    recentFolder = folderBrowser.SelectedPath;
                     var filesFound = Directory.GetFiles(folderBrowser.SelectedPath);
 
                     foreach (var folderFiles in filesFound)
@@ -56,30 +60,22 @@ namespace CacheUtility
 
         private void zipCacheContents_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(recentCacheDirectory))
-            {
-                DialogResult dr = MessageBox.Show("Would you like to zip this folder's contents?", string.Empty, MessageBoxButtons.YesNo);
-                if (dr == DialogResult.Yes)
-                    ZipContents(recentCacheDirectory, new DirectoryInfo(recentCacheDirectory).Name);
-            }
-        }
+            if (string.IsNullOrEmpty(recentFolder))
+                return;
 
-        public void ZipContents(string directory, string folderName)
-        {
-            Zip zip = new Zip();
-            zip.Create(Path.Combine(directory, folderName + ".zip"));
-            zip.Progress += ZipProgress;
-            zip.AddDirectory(directory, true);
-            zip.DeleteFile(Path.Combine(folderName, folderName + ".zip"));
-            zip.Close();
+            DialogResult dr = MessageBox.Show("Would you like to zip this folder's contents?", string.Empty, MessageBoxButtons.YesNo);
+            if (dr == DialogResult.No)
+                return;
+
+            zip.CreateZip(recentFolder, new DirectoryInfo(recentFolder).Name);
             zipCacheContents.Visible = false;
             ProgressBar.Value = 0;
-            DialogResult dr = MessageBox.Show("Would you like to view your files?", string.Empty, MessageBoxButtons.YesNo);
+            dr = MessageBox.Show("Would you like to view your files?", string.Empty, MessageBoxButtons.YesNo);
             if (dr == DialogResult.Yes)
-                OpenFolder(directory);
+                OpenFolder(recentFolder);
         }
 
-        private void ZipProgress(object sender, FileSystemProgressEventArgs e)
+        private void DisplayProgress(object sender, FileSystemProgressEventArgs e)
         {
             Console.WriteLine("Total: %{0} completed", e.TotalPercentage);
             ProgressBar.Value = Convert.ToInt32(e.TotalPercentage);
