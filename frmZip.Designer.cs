@@ -34,10 +34,11 @@
             this.folderResults = new System.Windows.Forms.ListBox();
             this.zipCacheContents = new System.Windows.Forms.Button();
             this.fileViewData = new System.Windows.Forms.DataGridView();
-            this.StatusText = new System.Windows.Forms.Label();
             this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FileType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FileSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StatusText = new System.Windows.Forms.Label();
+            this.FilesLoaded = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.fileViewData)).BeginInit();
             this.SuspendLayout();
             // 
@@ -63,13 +64,13 @@
             this.folderResults.FormattingEnabled = true;
             this.folderResults.Location = new System.Drawing.Point(1, 1);
             this.folderResults.Name = "folderResults";
-            this.folderResults.Size = new System.Drawing.Size(143, 251);
+            this.folderResults.Size = new System.Drawing.Size(150, 251);
             this.folderResults.TabIndex = 2;
             this.folderResults.SelectedIndexChanged += new System.EventHandler(this.FolderResults_SelectedIndexChanged);
             // 
             // zipCacheContents
             // 
-            this.zipCacheContents.Location = new System.Drawing.Point(369, 301);
+            this.zipCacheContents.Location = new System.Drawing.Point(383, 301);
             this.zipCacheContents.Name = "zipCacheContents";
             this.zipCacheContents.Size = new System.Drawing.Size(83, 28);
             this.zipCacheContents.TabIndex = 4;
@@ -92,15 +93,6 @@
             this.fileViewData.Size = new System.Drawing.Size(418, 251);
             this.fileViewData.TabIndex = 5;
             // 
-            // StatusText
-            // 
-            this.StatusText.AutoSize = true;
-            this.StatusText.Location = new System.Drawing.Point(12, 314);
-            this.StatusText.Name = "StatusText";
-            this.StatusText.Size = new System.Drawing.Size(61, 13);
-            this.StatusText.TabIndex = 6;
-            this.StatusText.Text = "Status Text";
-            // 
             // FileName
             // 
             this.FileName.HeaderText = "File Name";
@@ -121,11 +113,30 @@
             this.FileSize.ReadOnly = true;
             this.FileSize.Width = 133;
             // 
+            // StatusText
+            // 
+            this.StatusText.AutoSize = true;
+            this.StatusText.Location = new System.Drawing.Point(12, 314);
+            this.StatusText.Name = "StatusText";
+            this.StatusText.Size = new System.Drawing.Size(61, 13);
+            this.StatusText.TabIndex = 6;
+            this.StatusText.Text = "Status Text";
+            // 
+            // FilesLoaded
+            // 
+            this.FilesLoaded.AutoSize = true;
+            this.FilesLoaded.Location = new System.Drawing.Point(1, 259);
+            this.FilesLoaded.Name = "FilesLoaded";
+            this.FilesLoaded.Size = new System.Drawing.Size(70, 13);
+            this.FilesLoaded.TabIndex = 7;
+            this.FilesLoaded.Text = "Files Loaded:";
+            // 
             // frmZipper
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(567, 329);
+            this.Controls.Add(this.FilesLoaded);
             this.Controls.Add(this.StatusText);
             this.Controls.Add(this.fileViewData);
             this.Controls.Add(this.zipCacheContents);
@@ -155,6 +166,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileType;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileSize;
+        private System.Windows.Forms.Label FilesLoaded;
     }
 }
 

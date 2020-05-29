@@ -20,6 +20,7 @@ namespace CacheUtility
         {
             InitializeComponent();
             StatusText.Text = string.Empty;
+            FilesLoaded.Text = string.Empty;
             ProgressBar.Visible = false;
             fileResults.Clear();
             zip.ProgressUpdated += DisplayProgress;
@@ -34,6 +35,7 @@ namespace CacheUtility
             folderResults.Items.Clear();
             fileResults.Clear();
             zipCacheContents.Visible = false;
+            FilesLoaded.Text = string.Empty;
         }
 
         private void LoadCacheButton_Click(object sender, EventArgs e)
@@ -56,6 +58,7 @@ namespace CacheUtility
                         folderResults.Items.Add(folderFiles.Replace(folderBrowser.SelectedPath + "\\", string.Empty));
                         fileResults.Add(folderFiles);
                     }
+                    FilesLoaded.Text = $"Files Loaded: {folderResults.Items.Count}";
                     zipCacheContents.Visible = true;
                 }
             }
@@ -94,7 +97,6 @@ namespace CacheUtility
 
         private void DisplayProgress(object sender, FileSystemProgressEventArgs e)
         {
-            Console.WriteLine("Total: %{0} completed", e.TotalPercentage);
             ProgressBar.Value = Convert.ToInt32(e.TotalPercentage);
             StatusText.Text = "Zipping folder contents...";
             StatusText.Refresh();
@@ -112,22 +114,21 @@ namespace CacheUtility
             StatusText.Text = message;
             Task.Delay(milliseconds).ContinueWith(_ =>
             {
-                Invoke(new MethodInvoker(() => { StatusText.Visible = false; }));
+                Invoke(new MethodInvoker(() => { StatusText.Text = string.Empty; }));
             });
         }
 
         private void OpenFolder(string folderPath)
         {
-            if (Directory.Exists(folderPath))
+            if (!Directory.Exists(folderPath))
+                return;
+            ProcessStartInfo startInfo = new ProcessStartInfo
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo
-                {
-                    Arguments = folderPath,
-                    FileName = "explorer.exe"
-                };
+                Arguments = folderPath,
+                FileName = "explorer.exe"
+            };
 
-                Process.Start(startInfo);
-            }
+            Process.Start(startInfo);
         }
 
 
