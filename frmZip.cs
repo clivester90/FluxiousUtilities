@@ -19,9 +19,6 @@ namespace CacheUtility
         public frmZipper()
         {
             InitializeComponent();
-            StatusText.Text = string.Empty;
-            FilesLoaded.Text = string.Empty;
-            ProgressBar.Visible = false;
             fileResults.Clear();
             zip.ProgressUpdated += DisplayProgress;
         }
@@ -34,7 +31,6 @@ namespace CacheUtility
         {
             folderResults.Items.Clear();
             fileResults.Clear();
-            zipCacheContents.Visible = false;
             FilesLoaded.Text = string.Empty;
         }
 
@@ -59,7 +55,7 @@ namespace CacheUtility
                         fileResults.Add(folderFiles);
                     }
                     FilesLoaded.Text = $"Files Loaded: {folderResults.Items.Count}";
-                    zipCacheContents.Visible = true;
+                    zipCacheContents.Enabled = true;
                 }
             }
         }
@@ -72,10 +68,12 @@ namespace CacheUtility
             DialogResult dr = MessageBox.Show("Would you like to zip this folder's contents?", string.Empty, MessageBoxButtons.YesNo);
             if (dr == DialogResult.No)
                 return;
-            ProgressBar.Visible = true;
+
+            Cursor.Current = Cursors.WaitCursor;
             zip.CreateZip(RecentFolder, new DirectoryInfo(RecentFolder).Name);
             HideProgressBar();
             SetStatusText("Finished Zipping contents.");
+            Cursor.Current = Cursors.Default;
             dr = MessageBox.Show("Would you like to view your files?", string.Empty, MessageBoxButtons.YesNo);
             if (dr == DialogResult.Yes)
                 OpenFolder(RecentFolder);
@@ -104,9 +102,8 @@ namespace CacheUtility
 
         private void HideProgressBar()
         {
-            zipCacheContents.Visible = false;
+            zipCacheContents.Enabled = false;
             ProgressBar.Value = 0;
-            ProgressBar.Visible = false;
         }
 
         private void SetStatusText(string message, int milliseconds = 2000)
@@ -114,7 +111,9 @@ namespace CacheUtility
             StatusText.Text = message;
             Task.Delay(milliseconds).ContinueWith(_ =>
             {
-                Invoke(new MethodInvoker(() => { StatusText.Text = string.Empty; }));
+                Invoke(new MethodInvoker(() => { 
+                    StatusText.Text = string.Empty; 
+                }));
             });
         }
 
@@ -130,8 +129,6 @@ namespace CacheUtility
 
             Process.Start(startInfo);
         }
-
-
     }
 
 }
