@@ -7,7 +7,6 @@ namespace CacheUtility.Cache
 
         public string RecentCacheDirectory { get; set; }
 
-
         public string GetFileSize(long length)
         {
             long B, KB = 1024, MB = KB * 1024, GB = MB * 1024;

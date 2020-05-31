@@ -20,7 +20,6 @@ namespace CacheUtility
         {
             InitializeComponent();
             fileResults.Clear();
-            zip.ProgressUpdated += DisplayProgress;
         }
 
         public string RecentFolder { get; set; }
@@ -70,11 +69,21 @@ namespace CacheUtility
                 return;
 
             Cursor.Current = Cursors.WaitCursor;
-            zip.CreateZip(RecentFolder, new DirectoryInfo(RecentFolder).Name);
-            HideProgressBar();
-            SetStatusText("Finished Zipping contents.");
+            StatusText.Text = "Zipping cache contents...";
+            zipBackgroundWorker.RunWorkerAsync();
+        }
+
+        private void ZipBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            zip.CreateZipFile(RecentFolder, new DirectoryInfo(RecentFolder).Name);
+        }
+
+        private void ZipBackgroundWorker_OnCompetion(object sender, RunWorkerCompletedEventArgs e)
+        {
+            SetStatusText("Finished zipping contents.", 3000);
             Cursor.Current = Cursors.Default;
-            dr = MessageBox.Show("Would you like to view your files?", string.Empty, MessageBoxButtons.YesNo);
+            DialogResult dr = MessageBox.Show("Would you like to view your files?", string.Empty, MessageBoxButtons.YesNo);
+
             if (dr == DialogResult.Yes)
                 OpenFolder(RecentFolder);
         }
@@ -90,20 +99,6 @@ namespace CacheUtility
             var fileSize = constants.GetFileSize(new FileInfo(filePath).Length);
 
             fileViewData.Rows.Add(fileName, fileType, fileSize);
-        }
-
-
-        private void DisplayProgress(object sender, FileSystemProgressEventArgs e)
-        {
-            ProgressBar.Value = Convert.ToInt32(e.TotalPercentage);
-            StatusText.Text = "Zipping folder contents...";
-            StatusText.Refresh();
-        }
-
-        private void HideProgressBar()
-        {
-            zipCacheContents.Enabled = false;
-            ProgressBar.Value = 0;
         }
 
         private void SetStatusText(string message, int milliseconds = 2000)
@@ -129,6 +124,9 @@ namespace CacheUtility
 
             Process.Start(startInfo);
         }
+
+        
+
     }
 
 }

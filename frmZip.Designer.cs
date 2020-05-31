@@ -30,26 +30,18 @@
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmZipper));
-            this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.LoadCacheButton = new System.Windows.Forms.Button();
             this.folderResults = new System.Windows.Forms.ListBox();
             this.zipCacheContents = new System.Windows.Forms.Button();
             this.fileViewData = new System.Windows.Forms.DataGridView();
-            this.StatusText = new System.Windows.Forms.Label();
-            this.FilesLoaded = new System.Windows.Forms.Label();
             this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FileType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FileSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.StatusText = new System.Windows.Forms.Label();
+            this.FilesLoaded = new System.Windows.Forms.Label();
+            this.zipBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.fileViewData)).BeginInit();
             this.SuspendLayout();
-            // 
-            // ProgressBar
-            // 
-            this.ProgressBar.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.ProgressBar.Location = new System.Drawing.Point(164, 314);
-            this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(199, 10);
-            this.ProgressBar.TabIndex = 0;
             // 
             // LoadCacheButton
             // 
@@ -108,24 +100,6 @@
             this.fileViewData.Size = new System.Drawing.Size(418, 251);
             this.fileViewData.TabIndex = 5;
             // 
-            // StatusText
-            // 
-            this.StatusText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.StatusText.AutoSize = true;
-            this.StatusText.Location = new System.Drawing.Point(12, 314);
-            this.StatusText.Name = "StatusText";
-            this.StatusText.Size = new System.Drawing.Size(0, 13);
-            this.StatusText.TabIndex = 6;
-            // 
-            // FilesLoaded
-            // 
-            this.FilesLoaded.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.FilesLoaded.AutoSize = true;
-            this.FilesLoaded.Location = new System.Drawing.Point(1, 259);
-            this.FilesLoaded.Name = "FilesLoaded";
-            this.FilesLoaded.Size = new System.Drawing.Size(0, 13);
-            this.FilesLoaded.TabIndex = 7;
-            // 
             // FileName
             // 
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
@@ -148,6 +122,29 @@
             this.FileSize.Name = "FileSize";
             this.FileSize.ReadOnly = true;
             // 
+            // StatusText
+            // 
+            this.StatusText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.StatusText.AutoSize = true;
+            this.StatusText.Location = new System.Drawing.Point(1, 311);
+            this.StatusText.Name = "StatusText";
+            this.StatusText.Size = new System.Drawing.Size(0, 13);
+            this.StatusText.TabIndex = 6;
+            // 
+            // FilesLoaded
+            // 
+            this.FilesLoaded.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.FilesLoaded.AutoSize = true;
+            this.FilesLoaded.Location = new System.Drawing.Point(1, 259);
+            this.FilesLoaded.Name = "FilesLoaded";
+            this.FilesLoaded.Size = new System.Drawing.Size(0, 13);
+            this.FilesLoaded.TabIndex = 7;
+            // 
+            // zipBackgroundWorker
+            // 
+            this.zipBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ZipBackgroundWorker_DoWork);
+            this.zipBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.ZipBackgroundWorker_OnCompetion);
+            // 
             // frmZipper
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -159,7 +156,6 @@
             this.Controls.Add(this.zipCacheContents);
             this.Controls.Add(this.folderResults);
             this.Controls.Add(this.LoadCacheButton);
-            this.Controls.Add(this.ProgressBar);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(583, 368);
             this.Name = "frmZipper";
@@ -172,8 +168,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ProgressBar ProgressBar;
         private System.Windows.Forms.Button LoadCacheButton;
         private System.Windows.Forms.Button zipCacheContents;
         public System.Windows.Forms.ListBox folderResults;
@@ -183,6 +177,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileType;
         private System.Windows.Forms.DataGridViewTextBoxColumn FileSize;
+        public System.ComponentModel.BackgroundWorker zipBackgroundWorker;
     }
 }
 
