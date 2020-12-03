@@ -16,7 +16,7 @@ namespace CacheUtility
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmZipper());
+            Application.Run(new FrmZipper());
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -13,18 +15,22 @@ using ComponentPro.IO;
 
 namespace CacheUtility
 {
-    public partial class frmZipper : Form
+    public partial class FrmZipper : Form
     {
 
-        public frmZipper()
+        public FrmZipper()
         {
             InitializeComponent();
+            Application.EnableVisualStyles();
             fileResults.Clear();
+            DirectoryTooltip.SetToolTip(LoadCacheButton, "Load Directory");
+            ZipFolderTooltip.SetToolTip(zipCacheContents, "Zip Selected Directory");
+            ClearPageTooltip.SetToolTip(ClearScreenButton, "Clear Page Data");
         }
 
         public string RecentFolder { get; set; }
         private readonly List<string> fileResults = new List<string>();
-        private readonly ZipHandler zip = new ZipHandler();
+        private readonly DirectoryHandler directory = new DirectoryHandler();
 
         public void ClearLists()
         {
@@ -33,7 +39,7 @@ namespace CacheUtility
             FilesLoaded.Text = string.Empty;
         }
 
-        private void LoadCacheButton_Click(object sender, EventArgs e)
+        private void LoadDirectoryButton_Click(object sender, EventArgs e)
         {
             using (FolderBrowserDialog folderBrowser = new FolderBrowserDialog())
             {
@@ -46,17 +52,30 @@ namespace CacheUtility
                 {
                     ClearLists();
                     RecentFolder = folderBrowser.SelectedPath;
-                    var filesFound = Directory.GetFiles(folderBrowser.SelectedPath);
 
-                    foreach (var folderFiles in filesFound)
-                    {
-                        folderResults.Items.Add(folderFiles.Replace(folderBrowser.SelectedPath + "\\", string.Empty));
-                        fileResults.Add(folderFiles);
-                    }
-                    FilesLoaded.Text = $"Files Loaded: {folderResults.Items.Count}";
-                    zipCacheContents.Enabled = true;
+                    DirectoryFinderWorker.RunWorkerAsync();
                 }
             }
+        }
+
+        private void DirectoryFinderWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            directory.LocateFilesInDirectory(RecentFolder);
+        }
+
+        private void DirectoryFinderWorker_OnCompetion(object sender, RunWorkerCompletedEventArgs e)
+        {
+            directory.filesFound.ToList().ForEach(fileFound =>
+            {
+                folderResults.Items.Add(fileFound.Replace(RecentFolder + "\\", string.Empty));
+                fileResults.Add(fileFound);
+            });
+
+            int count = folderResults.Items.Count;
+            FilesLoaded.Text = count > 0 ? $"Files Loaded: {folderResults.Items.Count}" : "No openable files found.";
+
+            zipCacheContents.Enabled = true;
+            ClearScreenButton.Enabled = true;
         }
 
         private void ZipCacheContents_Click(object sender, EventArgs e)
@@ -64,18 +83,17 @@ namespace CacheUtility
             if (string.IsNullOrEmpty(RecentFolder))
                 return;
 
-            DialogResult dr = MessageBox.Show("Would you like to zip this folder's contents?", string.Empty, MessageBoxButtons.YesNo);
+            DialogResult dr = MessageBox.Show("Would you like to zip this folder's contents? \nThis may take a while depending on directory size.", string.Empty, MessageBoxButtons.YesNo);
             if (dr == DialogResult.No)
                 return;
 
             Cursor.Current = Cursors.WaitCursor;
-            StatusText.Text = "Zipping cache contents...";
             zipBackgroundWorker.RunWorkerAsync();
         }
 
         private void ZipBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            zip.CreateZipFile(RecentFolder, new DirectoryInfo(RecentFolder).Name);
+            directory.CreateZipFile(RecentFolder, new DirectoryInfo(RecentFolder).Name);
         }
 
         private void ZipBackgroundWorker_OnCompetion(object sender, RunWorkerCompletedEventArgs e)
@@ -90,7 +108,6 @@ namespace CacheUtility
 
         private void FolderResults_SelectedIndexChanged(object sender, EventArgs e)
         {
-            fileViewData.Rows.Clear();
             var fileName = folderResults.SelectedItem.ToString();
             var filePath = Path.Combine(RecentFolder, fileName);
             var fileType = Path.GetExtension(filePath);
@@ -98,7 +115,23 @@ namespace CacheUtility
             CacheConstants constants = new CacheConstants();
             var fileSize = constants.GetFileSize(new FileInfo(filePath).Length);
 
-            fileViewData.Rows.Add(fileName, fileType, fileSize);
+            fileSelectedName.Text = "File: " + fileName;
+            fileSelectedType.Text = "File Type: " + fileType;
+            fileSelectedSize.Text = "File Size: " + fileSize;
+
+            loadFileButton.Enabled = fileName.EndsWith(".jar");
+
+            OpenFileTooltip.SetToolTip(loadFileButton, "Open " + filePath);
+
+            fileToOpen = filePath;
+
+        }
+
+        public string fileToOpen;
+
+        private void LoadFileButton_Click(object sender, EventArgs e)
+        {
+            Process.Start(fileToOpen);
         }
 
         private void SetStatusText(string message, int milliseconds = 2000)
@@ -106,8 +139,9 @@ namespace CacheUtility
             StatusText.Text = message;
             Task.Delay(milliseconds).ContinueWith(_ =>
             {
-                Invoke(new MethodInvoker(() => { 
-                    StatusText.Text = string.Empty; 
+                Invoke(new MethodInvoker(() =>
+                {
+                    StatusText.Text = string.Empty;
                 }));
             });
         }
@@ -125,8 +159,44 @@ namespace CacheUtility
             Process.Start(startInfo);
         }
 
-        
+        private void ClearScreenButton_Click(object sender, EventArgs e)
+        {
+            ClearLists();
+            fileSelectedName.Text = "File:";
+            fileSelectedType.Text = "File Type:";
+            fileSelectedSize.Text = "File Size:";
+        }
 
+        private List<string> filteredResults = new List<string>();
+
+        private void SearchResultsText_KeyEvent(object sender, KeyEventArgs e)
+        {
+            folderResults.BeginUpdate();
+
+            filteredResults = fileResults.Where(x => x.ToLower().Contains(SearchResultsText.Text.ToLower())).ToList();
+            folderResults.Items.Clear();
+            filteredResults.ToList().ForEach(fileFound => {
+                folderResults.Items.Add(fileFound.Replace(RecentFolder + "\\", string.Empty));
+            });
+
+            FilesLoaded.Text = "Files Loaded: " + folderResults.Items.Count.ToString();
+            folderResults.EndUpdate();
+        }
+
+        private void SearchResultsText_MouseClick(object sender, MouseEventArgs e)
+        {
+            SearchResultsText.Text = string.Empty;
+        }
+
+        private void CloseButton_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void MinimizeButton_Click(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
+        }
     }
 
 }
